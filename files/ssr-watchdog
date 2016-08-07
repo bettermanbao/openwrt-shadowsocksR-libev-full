@@ -19,7 +19,7 @@ if [ "$CURRENT" == "backup" ]; then
 	fi
 fi
 
-wget --spider --quiet -T 3 www.google.com.hk
+wget --spider --quiet -T 3 www.google.com/ncr
 if [ "$?" == "0" ]; then
 	echo "[$LOGTIME] No problem."
 	exit 0
@@ -30,7 +30,7 @@ else
 		/etc/init.d/shadowsocksr restart
 		if [ "$CURRENT" == "main" ]; then
 			sleep 3
-			wget --spider --quiet -T 3 www.google.com.hk
+			wget --spider --quiet -T 3 www.google.com/ncr
 			if [ "$?" == "0" ]; then
 				echo "[$LOGTIME] ShadowsocksR recovered."
 				exit 0
