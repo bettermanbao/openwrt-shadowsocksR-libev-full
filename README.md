@@ -86,10 +86,11 @@ ShadowsocksR-libev-full for OpenWrt
 截图  
 ---
 
-![luci000](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20000.png)
-![luci001](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20001.png)
-![luci002](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20002.png)
-![luci003](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20003.png)
+![luci000](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci000.png)
+![luci001](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci001.png)
+![luci002](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci002.png)
+![luci003](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci003.png)
+![luci004](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci004.png)
 
 ----------
 
