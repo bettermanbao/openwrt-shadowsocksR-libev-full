@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadowsocksR-libev
-PKG_VERSION:=2.5.4-1
-PKG_RELEASE:=release
+PKG_VERSION:=2.4.5
+PKG_RELEASE:=6pre
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.gz
 PKG_SOURCE_URL:=https://github.com/breakwa11/shadowsocks-libev.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=e4f9bfce5d074b10e95fb99612f01c8444a4dcfc
+PKG_SOURCE_VERSION:=a8c4b5c829e38af93d56bd6d6b7160d6c016e992
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_MAINTAINER:=breakwa11
 
@@ -21,59 +21,59 @@ PKG_BUILD_PARALLEL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/shadowsocksr-libev/Default
-  SECTION:=net
-  CATEGORY:=Network
-  TITLE:=Lightweight Secured Socks5 Proxy
-  URL:=https://github.com/breakwa11/shadowsocks-libev
+	SECTION:=net
+	CATEGORY:=Network
+	TITLE:=Lightweight Secured Socks5 Proxy
+	URL:=https://github.com/breakwa11/shadowsocks-libev
 endef
 
 define Package/shadowsocksr-libev
-  $(call Package/shadowsocksr-libev/Default)
-  TITLE+= (OpenSSL)
-  VARIANT:=openssl
-  DEPENDS:=+libopenssl +libpthread
+	$(call Package/shadowsocksr-libev/Default)
+	TITLE+= (OpenSSL)
+	VARIANT:=openssl
+	DEPENDS:=+libopenssl +libpthread
 endef
 
 define Package/shadowsocksr-libev-polarssl
-  $(call Package/shadowsocksr-libev/Default)
-  TITLE+= (PolarSSL)
-  VARIANT:=polarssl
-  DEPENDS:=+libpolarssl +libpthread
+	$(call Package/shadowsocksr-libev/Default)
+	TITLE+= (PolarSSL)
+	VARIANT:=polarssl
+	DEPENDS:=+libpolarssl +libpthread
 endef
 
 define Package/shadowsocksr-libev-gfwlist
-  $(call Package/shadowsocksr-libev/Default)
-  TITLE+= (OpenSSL)
-  VARIANT:=openssl
-  DEPENDS:=+libopenssl +libpthread +dnsmasq-full +ipset +iptables +wget
+	$(call Package/shadowsocksr-libev/Default)
+	TITLE+= (OpenSSL)
+	VARIANT:=openssl
+	DEPENDS:=+libopenssl +libpthread +dnsmasq-full +ipset +iptables +wget
 endef
 
 define Package/shadowsocksr-libev-gfwlist-polarssl
-  $(call Package/shadowsocksr-libev/Default)
-  TITLE+= (PolarSSL)
-  VARIANT:=polarssl
-  DEPENDS:=+libpolarssl +libpthread +dnsmasq-full +ipset +iptables +wget-nossl
+	$(call Package/shadowsocksr-libev/Default)
+	TITLE+= (PolarSSL)
+	VARIANT:=polarssl
+	DEPENDS:=+libpolarssl +libpthread +dnsmasq-full +ipset +iptables +wget-nossl
 endef
 
 define Package/shadowsocksr-libev-gfwlist-4M
-  $(call Package/shadowsocksr-libev/Default)
-  TITLE+= (PolarSSL)
-  VARIANT:=polarssl
-  DEPENDS:=+libpolarssl +libpthread +dnsmasq-full +ipset +iptables
+	$(call Package/shadowsocksr-libev/Default)
+	TITLE+= (PolarSSL)
+	VARIANT:=polarssl
+	DEPENDS:=+libpolarssl +libpthread +dnsmasq-full +ipset +iptables
 endef
 
 define Package/shadowsocksr-libev-server
-  $(call Package/shadowsocksr-libev/Default)
-  TITLE+= (OpenSSL)
-  VARIANT:=openssl
-  DEPENDS:=+libopenssl +libpthread
+	$(call Package/shadowsocksr-libev/Default)
+	TITLE+= (OpenSSL)
+	VARIANT:=openssl
+	DEPENDS:=+libopenssl +libpthread
 endef
 
 define Package/shadowsocksr-libev-server-polarssl
-  $(call Package/shadowsocksr-libev/Default)
-  TITLE+= (PolarSSL)
-  VARIANT:=polarssl
-  DEPENDS:=+libpolarssl +libpthread
+	$(call Package/shadowsocksr-libev/Default)
+	TITLE+= (PolarSSL)
+	VARIANT:=polarssl
+	DEPENDS:=+libpolarssl +libpthread
 endef
 
 define Package/shadowsocksr-libev/description
