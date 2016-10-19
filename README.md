@@ -5,7 +5,7 @@ ShadowsocksR-libev-full for OpenWrt
 ---
 
  本项目是 [ShadowsocksR-libev][1] 在 OpenWrt 上的完整移植，包括客户端和服务器端。   
- 当前版本: 2.4.5-6pre  
+ 当前版本: 2.5.4-1  
  
  [预编译 OpenWrt Chaos Calmer ipk 下载][R]
 
@@ -67,7 +67,7 @@ ShadowsocksR-libev-full for OpenWrt
    tar xjf OpenWrt-SDK-15.05-ar71xx-generic_gcc-4.8-linaro_uClibc-0.9.33.2.Linux-x86_64.tar.bz2
    cd OpenWrt-SDK-15.05-ar71xx-*
    # 获取 Makefile
-   git clone https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full.git package/shadowsocksR-libev-full
+   git clone https://github.com/chenhw2/openwrt-shadowsocksR-libev-full.git package/shadowsocksR-libev-full
    # 选择要编译的包 Network -> shadowsocksr-libev
    make menuconfig
    # 开始编译
@@ -94,8 +94,8 @@ ShadowsocksR-libev-full for OpenWrt
 
 ----------
 
-  [O]: https://github.com/bettermanbao/openwrt-shadowsocks-libev-full
+  [O]: https://github.com/chenhw2/openwrt-shadowsocks-libev-full
   [1]: https://github.com/breakwa11/shadowsocks-libev
-  [R]: https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/releases
+  [R]: https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/releases
   [S]: http://wiki.openwrt.org/doc/howto/obtain.firmware.sdk
   [X]: http://www.right.com.cn/forum/thread-185635-1-1.html
