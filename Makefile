@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadowsocksR-libev
-PKG_VERSION:=2.4.5
-PKG_RELEASE:=6pre
+PKG_VERSION:=2.5.4-1
+PKG_RELEASE:=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE).tar.gz
 PKG_SOURCE_URL:=https://github.com/breakwa11/shadowsocks-libev.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=a8c4b5c829e38af93d56bd6d6b7160d6c016e992
+PKG_SOURCE_VERSION:=e4f9bfce5d074b10e95fb99612f01c8444a4dcfc
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_MAINTAINER:=breakwa11
 
@@ -31,49 +31,49 @@ define Package/shadowsocksr-libev
 	$(call Package/shadowsocksr-libev/Default)
 	TITLE+= (OpenSSL)
 	VARIANT:=openssl
-	DEPENDS:=+libopenssl +libpthread
+	DEPENDS:=+libopenssl +libpcre +libpthread
 endef
 
 define Package/shadowsocksr-libev-polarssl
 	$(call Package/shadowsocksr-libev/Default)
 	TITLE+= (PolarSSL)
 	VARIANT:=polarssl
-	DEPENDS:=+libpolarssl +libpthread
+	DEPENDS:=+libpolarssl +libpcre +libpthread
 endef
 
 define Package/shadowsocksr-libev-gfwlist
 	$(call Package/shadowsocksr-libev/Default)
 	TITLE+= (OpenSSL)
 	VARIANT:=openssl
-	DEPENDS:=+libopenssl +libpthread +dnsmasq-full +ipset +iptables +wget
+	DEPENDS:=+libopenssl +libpcre +libpthread +dnsmasq-full +ipset +iptables +wget
 endef
 
 define Package/shadowsocksr-libev-gfwlist-polarssl
 	$(call Package/shadowsocksr-libev/Default)
 	TITLE+= (PolarSSL)
 	VARIANT:=polarssl
-	DEPENDS:=+libpolarssl +libpthread +dnsmasq-full +ipset +iptables +wget-nossl
+	DEPENDS:=+libpolarssl +libpcre +libpthread +dnsmasq-full +ipset +iptables +wget-nossl
 endef
 
 define Package/shadowsocksr-libev-gfwlist-4M
 	$(call Package/shadowsocksr-libev/Default)
 	TITLE+= (PolarSSL)
 	VARIANT:=polarssl
-	DEPENDS:=+libpolarssl +libpthread +dnsmasq-full +ipset +iptables
+	DEPENDS:=+libpolarssl +libpcre +libpthread +dnsmasq-full +ipset +iptables
 endef
 
 define Package/shadowsocksr-libev-server
 	$(call Package/shadowsocksr-libev/Default)
 	TITLE+= (OpenSSL)
 	VARIANT:=openssl
-	DEPENDS:=+libopenssl +libpthread
+	DEPENDS:=+libopenssl +libpcre +libpthread
 endef
 
 define Package/shadowsocksr-libev-server-polarssl
 	$(call Package/shadowsocksr-libev/Default)
 	TITLE+= (PolarSSL)
 	VARIANT:=polarssl
-	DEPENDS:=+libpolarssl +libpthread
+	DEPENDS:=+libpolarssl +libpcre +libpthread
 endef
 
 define Package/shadowsocksr-libev/description
@@ -110,12 +110,14 @@ Package/shadowsocksr-libev-server-polarssl/conffiles = $(Package/shadowsocksr-li
 define Package/shadowsocksr-libev-gfwlist/postinst
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	ipset create gfwlist hash:ip
-	iptables -t nat -I PREROUTING -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
-	iptables -t nat -I OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
+	if [ -f /etc/uci-defaults/shadowsocksr-postinst ]; then
+		( . /etc/uci-defaults/shadowsocksr-postinst ) && \
+		rm -f /etc/uci-defaults/shadowsocksr-postinst
+	fi
+	rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
 
-	/etc/init.d/dnsmasq restart
 	/etc/init.d/cron restart
+	/etc/init.d/dnsmasq restart
 	/etc/init.d/shadowsocksr restart
 fi
 exit 0
@@ -124,19 +126,19 @@ endef
 define Package/shadowsocks-libev-gfwlist/postrm
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	sed -i '/cache-size=5000/d' /etc/dnsmasq.conf
-	sed -i '/min-cache-ttl=1800/d' /etc/dnsmasq.conf
-	sed -i '/conf-dir=\/etc\/dnsmasq.d/d' /etc/dnsmasq.conf
-	rm -rf /etc/dnsmasq.d
+	mv -f /etc/dnsmasq.conf.bak /etc/dnsmasq.conf
+	rm -f /etc/dnsmasq.conf.ssr
+	rm -f /etc/dnsmasq.d/gfw_list.conf
+	rm -f /etc/dnsmasq.d/custom_list.conf
 	/etc/init.d/dnsmasq restart
 
-	sed -i '/ipset create gfwlist hash:ip/d' /etc/firewall.user
-	sed -i '/iptables -t nat -I PREROUTING -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080/d' /etc/firewall.user
-	sed -i '/iptables -t nat -I OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080/d' /etc/firewall.user
-	ipset flush gfwlist
+	mv -f /etc/firewall.user.bak /etc/firewall.user
+	rm -f /etc/firewall.user.ssr
+	/etc/init.d/firewall restart
 
 	sed -i '/shadowsocksr_watchdog.log/d' /etc/crontabs/root
 	/etc/init.d/cron restart
+	/etc/init.d/shadowsocksr stop
 fi
 exit 0
 endef
@@ -154,7 +156,7 @@ endif
 
 define Package/shadowsocksr-libev/install
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/shadowsocksr $(1)/etc/init.d/shadowsocksr
+	$(INSTALL_BIN) ./files/shadowsocksr.init $(1)/etc/init.d/shadowsocksr
 	$(INSTALL_CONF) ./files/shadowsocksr.json $(1)/etc/shadowsocksr.json
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-local $(1)/usr/bin/ssr-local
@@ -168,19 +170,21 @@ define Package/shadowsocksr-libev-gfwlist/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-redir $(1)/usr/bin/ssr-redir
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-tunnel $(1)/usr/bin/ssr-tunnel
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/shadowsocksr-gfwlist.postinst $(1)/etc/uci-defaults/shadowsocksr-postinst
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/shadowsocksr-gfwlist $(1)/etc/init.d/shadowsocksr
+	$(INSTALL_BIN) ./files/shadowsocksr-gfwlist.init $(1)/etc/init.d/shadowsocksr
 	$(INSTALL_CONF) ./files/shadowsocksr-gfwlist.json $(1)/etc/shadowsocksr.json.main
 	$(INSTALL_CONF) ./files/shadowsocksr-gfwlist.json $(1)/etc/shadowsocksr.json.backup
-	$(INSTALL_CONF) ./files/firewall.user $(1)/etc/firewall.user
-	$(INSTALL_CONF) ./files/dnsmasq.conf $(1)/etc/dnsmasq.conf
+	$(INSTALL_CONF) ./files/firewall.user $(1)/etc/firewall.user.ssr
+	$(INSTALL_CONF) ./files/dnsmasq.conf $(1)/etc/dnsmasq.conf.ssr
 	$(INSTALL_DIR) $(1)/etc/dnsmasq.d
 	$(INSTALL_CONF) ./files/gfw_list.conf $(1)/etc/dnsmasq.d/gfw_list.conf
 	$(INSTALL_CONF) ./files/custom_list.conf $(1)/etc/dnsmasq.d/custom_list.conf
 	$(INSTALL_DIR) $(1)/root
-	$(INSTALL_BIN) ./files/ssr-watchdog $(1)/root/ssr-watchdog
+	$(INSTALL_BIN) ./files/ssr-watchdog.sh $(1)/root/ssr-watchdog
 	$(INSTALL_DIR) $(1)/etc/crontabs
-	$(INSTALL_CONF) ./files/root $(1)/etc/crontabs/root
+	$(INSTALL_CONF) ./files/crontabs $(1)/etc/crontabs/root
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller
 	$(INSTALL_CONF) ./files/shadowsocksr-libev.lua $(1)/usr/lib/lua/luci/controller/shadowsocksr-libev.lua
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/model/cbi/shadowsocksr-libev
@@ -198,7 +202,7 @@ Package/shadowsocksr-libev-gfwlist-4M/install = $(Package/shadowsocksr-libev-gfw
 define Package/shadowsocksr-libev-server/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_CONF) ./files/shadowsocksr-server.json $(1)/etc/shadowsocksr-server.json
-	$(INSTALL_BIN) ./files/shadowsocksr-server $(1)/etc/init.d/shadowsocksr-server
+	$(INSTALL_BIN) ./files/shadowsocksr-server.init $(1)/etc/init.d/shadowsocksr-server
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-server $(1)/usr/bin/ssr-server
 endef

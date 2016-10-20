@@ -7,8 +7,8 @@ SERVICE_WRITE_PID=1
 SERVICE_DAEMONIZE=1
 
 CONFIG=/etc/shadowsocksr.json
-if [ ! -f $CONFIG ]; then
-  ln -sf /etc/shadowsocksr.json.main $CONFIG
+if [ ! -f ${CONFIG} ]; then
+  ln -sf ${CONFIG}.main $CONFIG
 fi
 
 start() {

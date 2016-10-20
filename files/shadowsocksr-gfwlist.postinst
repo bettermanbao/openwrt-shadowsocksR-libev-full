@@ -1,0 +1,7 @@
+#!/bin/sh
+
+mv -f /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+ln -sf /etc/dnsmasq.conf.ssr /etc/dnsmasq.conf
+
+mv -f /etc/firewall.user /etc/firewall.user.bak
+ln -sf /etc/firewall.user.ssr /etc/firewall.user
