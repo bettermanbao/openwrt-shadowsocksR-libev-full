@@ -136,7 +136,7 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 	rm -f /etc/firewall.user.ssr
 	/etc/init.d/firewall restart
 
-	sed -i '/shadowsocksr_watchdog.log/d' /etc/crontabs/root
+	sed -i '/shadowsocksr_watchdog/d' /etc/crontabs/root
 	/etc/init.d/cron restart
 	/etc/init.d/shadowsocksr stop
 fi
@@ -183,8 +183,6 @@ define Package/shadowsocksr-libev-gfwlist/install
 	$(INSTALL_CONF) ./files/custom_list.conf $(1)/etc/dnsmasq.d/custom_list.conf
 	$(INSTALL_DIR) $(1)/root
 	$(INSTALL_BIN) ./files/ssr-watchdog.sh $(1)/root/ssr-watchdog
-	$(INSTALL_DIR) $(1)/etc/crontabs
-	$(INSTALL_CONF) ./files/crontabs $(1)/etc/crontabs/root
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller
 	$(INSTALL_CONF) ./files/shadowsocksr-libev.lua $(1)/usr/lib/lua/luci/controller/shadowsocksr-libev.lua
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/model/cbi/shadowsocksr-libev
