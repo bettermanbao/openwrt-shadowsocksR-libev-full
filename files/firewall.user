@@ -17,4 +17,5 @@ ipset -! -R <<-EOF || return 1
 EOF
 iptables -t nat -I PREROUTING -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
 iptables -t nat -I OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
+iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53
 
