@@ -1,0 +1,11 @@
+#!/bin/sh
+
+mv -f /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+ln -sf /etc/dnsmasq.conf.ssr /etc/dnsmasq.conf
+
+mv -f /etc/firewall.user /etc/firewall.user.bak
+ln -sf /etc/firewall.user.ssr /etc/firewall.user
+
+sed -i '/shadowsocksr_watchdog/d' /etc/crontabs/root
+echo '*/10 * * * * /root/ssr-watchdog >> /var/log/shadowsocksr_watchdog.log 2>&1' >> /etc/crontabs/root
+echo '0    1 * * 0 echo "" > /var/log/shadowsocksr_watchdog.log' >> /etc/crontabs/root

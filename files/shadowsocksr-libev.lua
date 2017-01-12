@@ -11,7 +11,11 @@ function index()
 
 	entry({"admin", "services", "shadowsocksr-libev", "general"},
 		cbi("shadowsocksr-libev/shadowsocksr-libev-general"),
-		_("General Settings"), 10).leaf = true
+		_("Main Server"), 10).leaf = true
+
+	entry({"admin", "services", "shadowsocksr-libev", "backup"},
+		cbi("shadowsocksr-libev/shadowsocksr-libev-backup"),
+		_("Backup Server"), 11).leaf = true
 
 	entry({"admin", "services", "shadowsocksr-libev", "gfwlist"},
 		call("action_gfwlist"),

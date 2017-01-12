@@ -1,0 +1,34 @@
+#!/bin/sh /etc/rc.common
+
+START=95
+
+SERVICE_USE_PID=1
+SERVICE_WRITE_PID=1
+SERVICE_DAEMONIZE=1
+
+CONFIG=/etc/shadowsocksr.json
+if [ ! -f ${CONFIG} ]; then
+  ln -sf ${CONFIG}.main $CONFIG
+fi
+
+start() {
+	mkdir -p /var/dnsmasq.d
+	sed -n 's/.*server.*"\(.*\)".*/\1/p' ${CONFIG}* | sed "s/^/server=\//;s/$/\/114.114.115.115/"    >  /var/dnsmasq.d/ss.conf
+	sed -n 's/.*server.*"\(.*\)".*/\1/p' ${CONFIG}* | sed "s/^/server=\//;s/$/\/208.67.222.222#443/" >> /var/dnsmasq.d/ss.conf
+	( sort -u /var/dnsmasq.d/ss.conf > /var/dnsmasq.d/ss-servers.conf ) && rm -f /var/dnsmasq.d/ss.conf
+	/etc/init.d/dnsmasq restart
+
+	service_start /usr/bin/ssr-redir -c $CONFIG -b 0.0.0.0 -l 1080
+	sleep 1
+	service_start /usr/bin/ssr-tunnel -c $CONFIG -b 0.0.0.0 -l 5353 -L 8.8.8.8:53 -U
+	sleep 1
+}
+
+stop() {
+	rm -f /var/dnsmasq.d/ss.conf /var/dnsmasq.d/ss-servers.conf 2>/dev/null
+
+	service_stop /usr/bin/ssr-redir
+	sleep 1
+	service_stop /usr/bin/ssr-tunnel
+	sleep 1
+}

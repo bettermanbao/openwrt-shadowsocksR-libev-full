@@ -5,7 +5,7 @@ ShadowsocksR-libev-full for OpenWrt
 ---
 
  本项目是 [ShadowsocksR-libev][1] 在 OpenWrt 上的完整移植，包括客户端和服务器端。   
- 当前版本: 2.4.5-6pre  
+ 当前版本: 2.6.0-1  
  
  [预编译 OpenWrt Chaos Calmer ipk 下载][R]
 
@@ -62,16 +62,22 @@ ShadowsocksR-libev-full for OpenWrt
  - 从 OpenWrt 的 [SDK][S] 编译
 
    ```bash
-   # 以 OpenWrt Chaos Calmer 15.05 ar71xx 平台为例
-   wget https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-SDK-15.05-ar71xx-generic_gcc-4.8-linaro_uClibc-0.9.33.2.Linux-x86_64.tar.bz2
-   tar xjf OpenWrt-SDK-15.05-ar71xx-generic_gcc-4.8-linaro_uClibc-0.9.33.2.Linux-x86_64.tar.bz2
-   cd OpenWrt-SDK-15.05-ar71xx-*
-   # 获取 Makefile
-   git clone https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full.git package/shadowsocksR-libev-full
-   # 选择要编译的包 Network -> shadowsocksr-libev
+   # 以 ar71xx 平台为例
+   tar xjf OpenWrt-SDK-ar71xx-for-linux-x86_64-gcc-4.8-linaro_uClibc-0.9.33.2.tar.bz2
+   cd OpenWrt-SDK-ar71xx-*
+   # 安装 feeds
+   # 如果是 uClibc SDK (15.05.1 及以下)
+    git clone https://github.com/aa65535/openwrt-feeds.git package/feeds
+   # 如果是 musl SDK (trunk 或 LEDE)
+    ./scripts/feeds update base packages
+    ./scripts/feeds install zlib libopenssl libpolarssl libmbedtls libpcre
+   rm -rf package/feeds/base/mbedtls/patches
+   # 获取 shadowsocks-libev Makefile
+   git clone https://github.com/chenhw2/openwrt-shadowsocksR-libev-full.git package/feeds/shadowsocksR-libev-full
+   # 选择要编译的包 Network -> shadowsocksr-libev-*
    make menuconfig
    # 开始编译
-   make package/shadowsocksR-libev-full/compile V=s
+   make package/feeds/shadowsocksR-libev-full/compile V=s
    ```
 
 配置  
@@ -83,18 +89,39 @@ ShadowsocksR-libev-full for OpenWrt
 
  - shadowsocks-libev-server 配置文件: `/etc/shadowsocksr-server.json`
 
+ - 软件包本身并不包含配置文件, 配置文件内容为 JSON 格式, 支持的键:  
+
+   键名           | 数据类型   | 说明
+   ---------------|------------|-----------------------------------------------
+   server         | 字符串     | 服务器地址, 可以是 IP 或者域名
+   server_port    | 数值       | 服务器端口号, 小于 65535
+   local_address  | 字符串     | 本地绑定的 IP 地址, 默认 127.0.0.1
+   local_port     | 数值       | 本地绑定的端口号, 小于 65535
+   password       | 字符串     | 服务端设置的密码
+   method         | 字符串     | 加密方式, [详情参考][E]
+   timeout        | 数值       | 超时时间（秒）, 默认 60
+   fast_open      | 布尔值     | 是否启用 [TCP-Fast-Open][F], 只适用于 ss-local
+   nofile         | 数值       | 设置 Linux ulimit
+   protocol       | 协议插件   | 客户端的协议插件，推荐使用[auth_sha1_v4, auth_aes128_md5, auth_aes128_sha1][P]
+   obfs           | 混淆插件   | 客户端的混淆插件，推荐使用[plain, http_simple, http_post, tls1.2_ticket_auth][P]
+
+
+
+
 截图  
 ---
 
-![luci000](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20000.png)
-![luci001](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20001.png)
-![luci002](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20002.png)
-![luci003](https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci%20003.png)
+![luci000](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci000.png)
+![luci001](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci001.png)
+![luci002](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci002.png)
+![luci003](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci003.png)
+![luci004](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci004.png)
 
 ----------
 
-  [O]: https://github.com/bettermanbao/openwrt-shadowsocks-libev-full
+  [O]: https://github.com/chenhw2/openwrt-shadowsocks-libev-full
   [1]: https://github.com/breakwa11/shadowsocks-libev
-  [R]: https://github.com/bettermanbao/openwrt-shadowsocksR-libev-full/releases
+  [R]: https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/releases
   [S]: http://wiki.openwrt.org/doc/howto/obtain.firmware.sdk
   [X]: http://www.right.com.cn/forum/thread-185635-1-1.html
+  [P]: https://github.com/breakwa11/shadowsocks-rss/wiki/obfs
