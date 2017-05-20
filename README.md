@@ -52,13 +52,13 @@ ShadowsocksR-libev-full for OpenWrt
    # 如果是 musl SDK (trunk 或 LEDE)
     ./scripts/feeds update base packages
     ./scripts/feeds install zlib libopenssl libpolarssl libmbedtls libpcre
-   rm -rf package/feeds/base/mbedtls/patches
+    rm -rf package/feeds/base/mbedtls/patches
    # 获取 shadowsocks-libev Makefile
-   git clone https://github.com/chenhw2/openwrt-shadowsocksR-libev-full.git package/feeds/shadowsocksR-libev-full
-   # 选择要编译的包 Network -> shadowsocksr-libev-*
+   git clone https://github.com/chenhw2/openwrt-shadowsocksR-libev-full.git package/feeds/shadowsocksr-gfwlist
+   # 选择要编译的包 Network -> shadowsocksr-gfwlist*
    make menuconfig
    # 开始编译
-   make package/feeds/shadowsocksR-libev-full/compile V=s
+   make package/feeds/shadowsocksr-gfwlist/compile V=s
    ```
 
 配置  
@@ -85,7 +85,7 @@ ShadowsocksR-libev-full for OpenWrt
 
 截图  
 ---
-
+![make](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/make.png)
 ![luci000](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci000.png)
 ![luci001](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci001.png)
 ![luci002](https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/blob/master/snapshot/luci002.png)
