@@ -5,7 +5,7 @@ ShadowsocksR-libev-full for OpenWrt
 ---
 
  本项目是 [ShadowsocksR-libev][1] 在 OpenWrt 上的完整移植，包括客户端和服务器端。   
- 当前版本: 2.6.0-1  
+ 当前版本: 2.5.6 (SSR:2670ab2)
  
  [预编译 OpenWrt Chaos Calmer ipk 下载][R]
 
@@ -13,16 +13,6 @@ ShadowsocksR-libev-full for OpenWrt
  
 特性  
 ---
-
-可编译 两种客户端版本 和 一种服务器端版本。
-
- - shadowsocksR-libev
-
-   > 官方原版客户端  
-   
-   > 可执行文件 `ssr-{local,redir,tunnel}`  
-   > 默认启动:  
-   > `ssr-local` 提供 SOCKS 代理  
 
  - shadowsocksR-libev-gfwlist
 
@@ -46,15 +36,6 @@ ShadowsocksR-libev-full for OpenWrt
      >> opkg --force-overwrite install /tmp/shadowsocksr-libev-gfwlist*.ipk  
      >> ```  
      >> 安装结束时会提示一条错误信息，这是升级dnsmasq-full时的配置文件残留造成的，可以忽略。  
-
- - shadowsocksR-libev-server
-
-   > 官方原版服务器端  
-   > 目前仅支持Shadowsocks原版协议
-   
-   > 可执行文件 `ssr-server`  
-   > 默认启动:  
-   > `ssr-server` 提供 shadowsocks 服务  
 
 编译  
 ---
@@ -83,11 +64,7 @@ ShadowsocksR-libev-full for OpenWrt
 配置  
 ---
 
- - shadowsocks-libev 配置文件: `/etc/shadowsocksr.json`
-
  - shadowsocks-libev-gfwlist 配置文件: `/etc/shadowsocksr.json.main /etc/shadowsocksr.json.backup`
-
- - shadowsocks-libev-server 配置文件: `/etc/shadowsocksr-server.json`
 
  - 软件包本身并不包含配置文件, 配置文件内容为 JSON 格式, 支持的键:  
 
@@ -106,8 +83,6 @@ ShadowsocksR-libev-full for OpenWrt
    obfs           | 混淆插件   | 客户端的混淆插件，推荐使用[plain, http_simple, http_post, tls1.2_ticket_auth][P]
 
 
-
-
 截图  
 ---
 
@@ -120,7 +95,7 @@ ShadowsocksR-libev-full for OpenWrt
 ----------
 
   [O]: https://github.com/chenhw2/openwrt-shadowsocks-libev-full
-  [1]: https://github.com/breakwa11/shadowsocks-libev
+  [1]: https://github.com/shadowsocksr/shadowsocksr-libev
   [R]: https://github.com/chenhw2/openwrt-shadowsocksR-libev-full/releases
   [S]: http://wiki.openwrt.org/doc/howto/obtain.firmware.sdk
   [X]: http://www.right.com.cn/forum/thread-185635-1-1.html

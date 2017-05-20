@@ -13,9 +13,14 @@ echo " * * Shadowsocks with IPSET-GFWlist on port 1080"
 ipset -! -R <<-EOF || return 1
   create gfwlist hash:ip
   flush gfwlist
-  $(sed -nr 's/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\nadd gfwlist \1/;s/^.*\n//p' /etc/dnsmasq.d/gfw_list.conf | sort -u | grep -v '127.0.0.1')
+  add gfwlist 8.8.8.8
+  add gfwlist 85.17.73.0/24
+  add gfwlist 91.108.4.0/22
+  add gfwlist 91.108.56.0/22
+  add gfwlist 109.239.140.0/24
+  add gfwlist 149.154.160.0/20
+  # $(sed -nr 's/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\nadd gfwlist \1/;s/^.*\n//p' /etc/dnsmasq.d/gfw_list.conf | sort -u | grep -v '127.0.0.1')
 EOF
 iptables -t nat -I PREROUTING -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
 iptables -t nat -I OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080
 iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53
-
