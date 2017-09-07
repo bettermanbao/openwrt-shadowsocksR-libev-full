@@ -8,6 +8,7 @@
 
 ipset create gfwlist hash:net
 ipset add gfwlist 8.8.8.8
+ipset add gfwlist 208.67.220.220
 ipset add gfwlist 91.108.4.0/22
 ipset add gfwlist 91.108.56.0/22
 ipset add gfwlist 109.239.140.0/24
@@ -18,3 +19,4 @@ iptables -t nat -I OUTPUT -p tcp -m set --match-set gfwlist dst -j REDIRECT --to
 
 iptables -t nat -I PREROUTING -i br-lan -p udp -d 8.8.4.4 --dport 53 -j REDIRECT --to-ports 53
 iptables -t nat -I PREROUTING -i br-lan -p udp -d 8.8.8.8 --dport 53 -j REDIRECT --to-ports 53
+iptables -t nat -I PREROUTING -i br-lan -p udp -d 208.67.220.220 --dport 443 -j REDIRECT --to-ports 443
